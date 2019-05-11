@@ -26,7 +26,6 @@ We use Adam as the optimizer with an initial learning rate of 1e-4 to minimize o
 State Input shape: (batch_size, timesteps, input_dims)
 batch_size and timesteps are hyperparameters and can be experimented on. We set the number of timesteps = 50 in our experiments which produces an accuracy of ~ 52% over 5 composers. 
 
-**Improvement**
 * Additional data, lower timestep granularity, larger timesteps could be tried to further improve the accuracy. 
 * We have relatively lesser data for Schumann which is ~ 35% of what we have for other composers. We could balance the data for Schumann to improve the accuracy.
 
