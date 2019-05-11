@@ -1,5 +1,5 @@
 # Whos-the-composer
-A Recurrent Neural Network Classifier which predicts the composer of a classical piece
+A Recurrent Neural Network Classifier to predict the composer of a classical piece
 
 This work was done to explore the uniqueness of classical composers. Do composers have their own unique styles of playing music?
 Can we predict the composer by just listening to the classical piece?
