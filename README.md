@@ -1,10 +1,12 @@
 # Whos-the-composer
 A Recurrent Neural Network Classifier to predict the composer of a classical piece
 
-This work was done to explore the uniqueness of classical composers. Do composers have their own unique styles of playing music?
-Can we predict the composer by just listening to the classical piece?
+This work was done to explore the uniqueness of classical composers. 
+* Do composers have their own unique styles of playing music?
+* Can we predict the composer by just listening to the classical piece?
 
-This work builds a Gated Recurrent Network classifier that takes in a part of any classical piece and predicts the composer.
+This work builds a Gated Recurrent Network classifier that takes in a segment of a classical piece and predicts its composer.
+A decent accuracy of the classifier would indicate that there could be some distinctive quality in the compositions of different composers.
 
 ### Dataset
 The dataset comprises of midi files from five classical composers (Chopin, Beethoven, Mozart, Schubert, Schumann). 
