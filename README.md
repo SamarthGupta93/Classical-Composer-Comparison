@@ -29,5 +29,11 @@ This implies that there must be some uniqueness in the compositions of different
 
 ### References
 
-https://github.com/hexahedria/biaxial-rnn-music-composition <br />
-http://www.piano-midi.de/
+* https://github.com/hexahedria/biaxial-rnn-music-composition <br />
+* http://www.piano-midi.de/
+
+### Requirements
+
+* python3-midi (https://github.com/louisabraham/python3-midi)
+* keras
+* numpy
