@@ -24,7 +24,7 @@ We use Adam as the optimizer with an initial learning rate of 1e-4 to minimize o
 **State Input --> GRU --> FC_1 --> Output_layer**
 
 State Input shape: (batch_size, timesteps, input_dims)
-batch_size and timesteps are hyperparameters and can be experimented on. We set the number of timesteps = 50 in our experiments which produces an accuracy of ~ 52% over 5 classes.
+batch_size and timesteps are hyperparameters and can be experimented on. We set the number of timesteps = 50 in our experiments which produces an accuracy of ~ 52% over 5 composers.
 This implies that there must be some uniqueness in the compositions of different composers. Further analysis could be done to explore this uniqueness.
 
 ### References
