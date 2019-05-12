@@ -24,12 +24,12 @@ We use Adam as the optimizer with an initial learning rate of 1e-4 to minimize o
 **State Input --> GRU --> FC_1 --> Output_layer**
 
 State Input shape: (batch_size, timesteps, input_dims)
-batch_size and timesteps are hyperparameters and can be experimented on. We set the number of timesteps = 50 in our experiments which produces an accuracy of ~ 52% over 5 composers. 
+batch_size and timesteps are hyperparameters and can be experimented on. We set the number of timesteps = 50 in our experiments which produces an accuracy of ~ 85% over two composers (Beethoven, Mozart) and ~ 52% over all 5 composers. 
 
 * Additional data, lower timestep granularity, larger timesteps could be tried to further improve the accuracy. 
 * We have relatively lesser data for Schumann which is ~ 35% of what we have for other composers. We could balance the data for Schumann to improve the accuracy.
 
-**Conclusion** - An accuracy of > 50% over five composers indicates that there must be some uniqueness in the pieces of different composers that the network is able to capture. Further analysis could be done to explore this uniqueness.
+**Conclusion** - The model produces and accuracy of ~85% to distinguish Beethoven and Mozart pieces and an accuracy of ~52% over all five composers. This indicates that there must be some uniqueness in the pieces of different composers that the network is able to capture. Further analysis could be done to explore this uniqueness.
 
 ### References
 
