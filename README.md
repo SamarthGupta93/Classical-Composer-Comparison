@@ -1,4 +1,5 @@
-# Whos-the-composer
+#
+Whos-the-composer
 A Recurrent Neural Network Classifier to predict the composer of a classical piece
 
 This work was done to explore the uniqueness of classical composers. 
@@ -25,6 +26,15 @@ We use Adam as the optimizer with an initial learning rate of 1e-4 to minimize o
 
 State Input shape: (batch_size, timesteps, input_dims)
 
+### Preliminary Data Analysis
+Preliminary data visualization shows that:
+* Beethoven has the maximum variation in the pitch. 
+* Mozart tends to stay in medium pitch. Does not use low pitch very often
+* Schumann tends to stay in low pitch. The compositions do not go into high pitch often.
+
+![Beethoven Vs Mozart](beethoven_mozart.png)
+![Beethoven Vs Schumann](beethoven_schumann.png)
+![Schumann Vs Mozart](schumann_mozart.png)
 
 ### References
 
