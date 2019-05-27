@@ -3,50 +3,50 @@ import numpy as np
 from midi_to_statematrix import midiToNoteStateMatrix
 import constants
 from keras.utils import to_categorical
-
+import random
 
 composer_token_map = {
-	0: constants.CHOPIN,
-	1: constants.BEETHOVEN,
-	2: constants.MOZART,
-	3: constants.SCHUBERT,
-	4: constants.SCHUMANN
+	constants.BEETHOVEN:0,
+	constants.MOZART:1
 }
+
+
+def get_batch(data_map, batch_size=64, timesteps=50):
+	x_batch = []
+	y_batch = []
+	i=0
+	for batch_count in range(batch_size):
+		# Randomly choose a composer dataset
+		composer, composer_data = select_composer(data_map)
+		# Randomly choose start index of timesteps
+		start_idx = np.random.randint(len(composer_data)-timesteps)
+		# Pick timesteps from start idx. This will be one state input
+		end_idx = start_idx + timesteps
+		state_input = np.expand_dims(composer_data[start_idx:end_idx], axis=0)
+
+		# Add to x_batch, y_batch
+		if i==0:
+			x_batch = state_input
+			y_batch = np.array(composer_token_map[composer])
+		else:
+			x_batch = np.vstack([x_batch, state_input])
+			y_batch = np.vstack([y_batch, np.array(composer_token_map[composer])])
+		i+=1
+
+	#x_batch = np.array(x_batch)
+	return x_batch, y_batch
+
 
 def randomized_generator(data_map, batch_size=64, timesteps=50, n_classes=5):
 	# x_batch - shape: (batch_size, timesteps, input_dim)
-	x_batch = []
-	y_batch = []
 	while True:
-		i=0
-		for batch_count in range(batch_size):
-			# Randomly choose a composer dataset
-			composer_data, composer_token = select_composer(data_map)
-			# Randomly choose start index of timesteps
-			start_idx = np.random.randint(len(composer_data)-timesteps)
-			# Pick timesteps from start idx. This will be one state input
-			end_idx = start_idx + timesteps
-			state_input = np.expand_dims(composer_data[start_idx:end_idx], axis=0)
-
-			# Add to x_batch, y_batch
-			if i==0:
-				x_batch = state_input
-				y_batch = np.array(composer_token)
-			else:
-				x_batch = np.vstack([x_batch, state_input])
-				y_batch = np.vstack([y_batch, np.array(composer_token)])
-			i+=1
-
-		#x_batch = np.array(x_batch)
+		x_batch, y_batch = get_batch(data_map, batch_size, timesteps)
 		y_batch = to_categorical(y_batch, num_classes=n_classes)
 		yield(x_batch, y_batch)
 
 
 def select_composer(data_map):
-	n_composers = len(data_map)
-	composer_token = np.random.randint(n_composers)
-	composer_data = data_map[composer_token_map[composer_token]]
-	return composer_data, composer_token
+	return random.choice(list(data_map.items()))
 
 
 def create_dataset():
@@ -67,41 +67,52 @@ def create_dataset():
 	np.save(file=constants.dataset_path+'schumann', arr=schumann_data)
 
 
-def get_datamap(split=True, split_idx=[0.8,0.9]):
-	chopin_data = np.load(file=constants.dataset_path+'chopin.npy')
-	beethoven_data = np.load(file=constants.dataset_path+'beethoven.npy')
-	mozart_data = np.load(file=constants.dataset_path+'mozart.npy')
-	schubert_data = np.load(file=constants.dataset_path+'schubert.npy')
-	schumann_data = np.load(file=constants.dataset_path+'schumann.npy')
+
+def get_datamap(composers, split=True, split_idx=[0.8,0.9]):
+	chopin_data, beethoven_data, mozart_data, schubert_data, schumann_data = None, None, None, None, None
+	if composers[constants.CHOPIN]: chopin_data = np.load(file=constants.dataset_path+'chopin.npy')
+	if composers[constants.BEETHOVEN]: beethoven_data = np.load(file=constants.dataset_path+'beethoven.npy')
+	if composers[constants.MOZART]: mozart_data = np.load(file=constants.dataset_path+'mozart.npy')
+	if composers[constants.SCHUBERT]: schubert_data = np.load(file=constants.dataset_path+'schubert.npy')
+	if composers[constants.SCHUMANN]: schumann_data = np.load(file=constants.dataset_path+'schumann.npy')
+	chopin_train, chopin_dev, chopin_test = None, None, None
+	beethoven_train, beethoven_dev, beethoven_test = None, None, None
+	mozart_train, mozart_dev, mozart_test = None, None, None
+	schubert_train, schubert_dev, schubert_test = None, None, None
+	schumann_train, schumann_dev, schumann_test = None, None, None
 
 	if split:
-		chopin_train, chopin_dev, chopin_test = split_dataset(dataset=chopin_data, split=split_idx)
-		beethoven_train, beethoven_dev, beethoven_test = split_dataset(dataset=beethoven_data, split=split_idx)
-		mozart_train, mozart_dev, mozart_test = split_dataset(dataset=mozart_data, split=split_idx)
-		schubert_train, schubert_dev, schubert_test = split_dataset(dataset=schubert_data, split=split_idx)
-		schumann_train, schumann_dev, schumann_test = split_dataset(dataset=schumann_data, split=split_idx)
+		if composers[constants.CHOPIN]: chopin_train, chopin_dev, chopin_test = split_dataset(dataset=chopin_data, split=split_idx)
+		if composers[constants.BEETHOVEN]: beethoven_train, beethoven_dev, beethoven_test = split_dataset(dataset=beethoven_data, split=split_idx)
+		if composers[constants.MOZART]: mozart_train, mozart_dev, mozart_test = split_dataset(dataset=mozart_data, split=split_idx)
+		if composers[constants.SCHUBERT]: schubert_train, schubert_dev, schubert_test = split_dataset(dataset=schubert_data, split=split_idx)
+		if composers[constants.SCHUMANN]: schumann_train, schumann_dev, schumann_test = split_dataset(dataset=schumann_data, split=split_idx)
 
-		train_map = create_map(chopin_train, beethoven_train, mozart_train, schubert_train, schumann_train)
-		dev_map = create_map(chopin_dev, beethoven_dev, mozart_dev, schubert_dev, schumann_dev)
-		test_map = create_map(chopin_test, beethoven_test, mozart_test, schubert_test, schumann_test)
+		train_map = create_map(composers, chopin_train, beethoven_train, mozart_train, schubert_train, schumann_train)
+		dev_map = create_map(composers, chopin_dev, beethoven_dev, mozart_dev, schubert_dev, schumann_dev)
+		test_map = create_map(composers, chopin_test, beethoven_test, mozart_test, schubert_test, schumann_test)
 
 		return train_map, dev_map, test_map
 
 	else:
-		return create_map(chopin_data, beethoven_data, mozart_data, schubert_data, schumann_data)
+		return create_map(composers, chopin_data, beethoven_data, mozart_data, schubert_data, schumann_data)
 
 def split_dataset(dataset, split=[0.8,0.9]):
 	train, dev, test = np.split(dataset,(int(split[0]*len(dataset)),int(split[1]*len(dataset))))
 	return train, dev, test
 
-def create_map(chopin_data, beethoven_data, mozart_data, schubert_data, schumann_data):
-	return {
+def create_map(composers, chopin_data=None, beethoven_data=None, mozart_data=None, schubert_data=None, schumann_data=None):
+	result_map = {
 		constants.CHOPIN: chopin_data,
 		constants.BEETHOVEN: beethoven_data,
 		constants.MOZART: mozart_data,
 		constants.SCHUBERT: schubert_data,
 		constants.SCHUMANN: schumann_data
 	}
+	for composer, include in composers.items():
+		if not include:
+			del result_map[composer]
+	return result_map
 
 def get_composer_data(composer_path):
 	i=0
